@@ -77,6 +77,7 @@ const player = new Sprite({
   image: playerDownImage,
   frames: {
     max: 4,
+    hold: 10
   },
   sprites: {
     up: playerUpImage,
@@ -150,7 +151,7 @@ function animate() {
   player.draw();
   foreground.draw();
   let moving = true;
-  player.moving = false;
+  player.animate = false;
   console.log(animationId);
   if (battle.initiated) return;
 
@@ -172,7 +173,7 @@ function animate() {
       if (
         rectangularCollision({ rectangle1: player, rectangle2: battleZone }) &&
         overLappingArea > (player.width * player.height) / 2 &&
-        Math.random() < 0.01
+        Math.random() < 0.1
       ) {
         console.log("pokemon spawn");
         battle.initiated = true;
@@ -197,14 +198,14 @@ function animate() {
             });
           },
         });
-        player.moving = false;
+        player.animate = false;
         break;
       }
     }
   }
 
   if (keys.w.pressed && lastKey === "w") {
-    player.moving = true;
+    player.animate = true;
     player.image = player.sprites.up;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -229,7 +230,7 @@ function animate() {
       movables.forEach((movable) => (movable.position.y += 3));
     }
   } else if (keys.s.pressed && lastKey === "s") {
-    player.moving = true;
+    player.animate = true;
     player.image = player.sprites.down;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -254,7 +255,7 @@ function animate() {
       movables.forEach((movable) => (movable.position.y -= 3));
     }
   } else if (keys.a.pressed && lastKey === "a") {
-    player.moving = true;
+    player.animate = true;
     player.image = player.sprites.left;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -279,7 +280,7 @@ function animate() {
       movables.forEach((movable) => (movable.position.x += 3));
     }
   } else if (keys.d.pressed && lastKey === "d") {
-    player.moving = true;
+    player.animate = true;
     player.image = player.sprites.right;
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -305,7 +306,7 @@ function animate() {
     }
   }
 }
-animate();
+// animate();
 
 const battleBackgroundImage = new Image();
 battleBackgroundImage.src = "./img/battleBackground.png";
@@ -318,11 +319,59 @@ const battleBackground = new Sprite({
   image: battleBackgroundImage,
 });
 
+const draggleImage = new Image();
+draggleImage.src = './img/draggleSprite.png';
+
+ const draggle = new Sprite({
+  position:{
+    x:800,
+    y:100
+  },
+  image : draggleImage,
+  frames:{max:4, hold: 30},
+  animate: true,
+  isEnemy : true
+}) 
+const embyImage = new Image();
+embyImage.src = './img/embySprite.png';
+
+ const emby = new Sprite({
+  position:{
+    x:280,
+    y:325
+  },
+  image : embyImage,
+  frames:{max:4, hold: 30},
+  animate: true
+ }) 
+
+const renderedSprites = [draggle,emby]
+
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
   console.log("animating");
   battleBackground.draw();
+
+  renderedSprites.forEach((sprite)=>{
+    sprite.draw();
+  })
+
 }
+
+animateBattle()
+
+
+const button = document.querySelectorAll('button').forEach(button=>{
+  button.addEventListener('click',(e)=>{
+  // console.log("clicked")
+  const selectedAttack = attacks[e.currentTarget.innerHTML]
+  emby.attack({
+     attack: selectedAttack,
+  recipient: draggle,
+})
+})
+})
+
 
 let lastKey = "";
 window.addEventListener("keydown", (e) => {
