@@ -9,4 +9,9 @@ const attacks = {
     damage: 25,
     type: 'Fire'
   },
+    Waterball:{
+    name: 'Waterball',
+    damage: 40,
+    type: 'Water'
+  },
 }
