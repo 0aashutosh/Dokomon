@@ -104,6 +104,7 @@ class Monster extends Sprite {
     if (this.isEnemy) rotation = -2.2;
 
     switch (attack.name) {
+      
       case "Tackle":
         const tl = gsap.timeline();
         let movementDistance = 20;

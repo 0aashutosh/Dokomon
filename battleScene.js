@@ -23,8 +23,17 @@ function initBattle() {
   document.querySelector('#enemyHealthBar').style.width = '100%'
   document.querySelector('#enemyHealthBar').style.width = '100%'
   document.querySelector('#attacksBox').replaceChildren()
-  draggle = new Monster(monsters.Draggle);
+
+const randomEnemy =  
+      enemyMonsters[Math.floor(Math.random() * enemyMonsters.length)]
+console.log(randomEnemy)
+  draggle = new Monster(randomEnemy);
   emby = new Monster(monsters.Emby);
+  // draggle.health = 100;
+  // emby.health = 100;
+
+document.querySelector('#enemyName').innerHTML = draggle.name;
+
   renderedSprites = [draggle, emby];
   emby.attacks.forEach((attack) => {
     const button = document.createElement("button");
