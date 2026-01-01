@@ -47,7 +47,6 @@ battleZonesMap.forEach((row, i) => {
     }
   });
 });
-// console.log(boundaries)
 const image = new Image();
 image.src = "./img/ownGameMap.png";
 
@@ -152,7 +151,6 @@ function animate() {
   foreground.draw();
   let moving = true;
   player.animate = false;
-  console.log(animationId);
   if (battle.initiated) return;
 
   //activate a battle
@@ -173,11 +171,13 @@ function animate() {
       if (
         rectangularCollision({ rectangle1: player, rectangle2: battleZone }) &&
         overLappingArea > (player.width * player.height) / 2 &&
-        Math.random() < 0.1
+        Math.random() < 0.01
       ) {
-        console.log("pokemon spawn");
-        battle.initiated = true;
         window.cancelAnimationFrame(animationId);
+        audio.Map.stop();
+        audio.initBattle.play(),
+        audio.battle.play()
+        battle.initiated = true;
         gsap.to("#overlappingDiv", {
           opacity: 1,
           repeat: 3,
@@ -188,6 +188,7 @@ function animate() {
               opacity: 1,
               duration: 0.4,
               onComplete() {
+                initBattle()
                 animateBattle();
                 gsap.to("#overlappingDiv", {
                   opacity: 0,
@@ -221,7 +222,6 @@ function animate() {
           },
         })
       ) {
-        console.log("collision");
         moving = false;
         break;
       }
@@ -246,7 +246,6 @@ function animate() {
           },
         })
       ) {
-        console.log("collision");
         moving = false;
         break;
       }
@@ -271,7 +270,6 @@ function animate() {
           },
         })
       ) {
-        console.log("collision");
         moving = false;
         break;
       }
@@ -296,7 +294,6 @@ function animate() {
           },
         })
       ) {
-        console.log("collision");
         moving = false;
         break;
       }
@@ -306,7 +303,7 @@ function animate() {
     }
   }
 }
-// animate();
+animate();
 
 
 
@@ -348,3 +345,11 @@ window.addEventListener("keyup", (e) => {
       break;
   }
 });
+
+let clicked = false
+addEventListener('click',()=>{
+  if(!clicked){
+    audio.Map.play()
+    clicked = true
+  }
+})
